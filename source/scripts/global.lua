@@ -1,0 +1,14 @@
+CURRENT_ZOOM = 2;
+
+
+Z_INDEX = {
+  BACKGROUND = 0,
+  P_OBJS = 10,
+  PLANET = 20,
+}
+
+
+SETTINGS = {
+  CRANK_SENSITIVITY = 0.025,
+  ZOOM_SPEED = 0.025,
+}

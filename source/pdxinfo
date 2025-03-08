@@ -1,0 +1,7 @@
+name=New Game
+author=Dylan Doughertry (DRD-DEV)
+description=A new Game
+bundleID=dev.drd.new.game
+imagePath=
+version=1.0
+buildNumber=1

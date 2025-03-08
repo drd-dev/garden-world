@@ -1,0 +1,3 @@
+builds/*
+*.pdx
+.DS_Store
