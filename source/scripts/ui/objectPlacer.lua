@@ -29,7 +29,8 @@ function ObjectPlacer:init()
 
 
   self.objects = {
-    Hut
+    Hut,
+    Bush
   }
 
   self.selectedObject = 1
@@ -45,6 +46,7 @@ function ObjectPlacer:init()
   gfx.popContext()
 
   self.cursor = Cursor();
+  self.cursor:setIcon(self.objects[self.selectedObject].icon);
 end
 
 function ObjectPlacer:update()
@@ -60,6 +62,15 @@ function ObjectPlacer:update()
     if (self:checkSpace(270 - self.planet.planetRotation, 32)) then
       self:placeObject()
     end
+  end
+
+
+  if (pd.buttonJustPressed(pd.kButtonLeft) and self:isVisible()) then
+    self:prevObject()
+  end
+
+  if (pd.buttonJustPressed(pd.kButtonRight) and self:isVisible()) then
+    self:nextObject()
   end
 
   self:markDirty();
@@ -91,7 +102,7 @@ function ObjectPlacer:checkSpace(angle, width)
   for i = 1, #objects do
     local obj = objects[i]
     local objAngle = obj.angle
-    local objWidth = obj.width
+    local objWidth = obj.width - 6
 
     local objLeftAngle = objAngle - objWidth / 2
     local objRightAngle = objAngle + objWidth / 2
@@ -106,6 +117,7 @@ function ObjectPlacer:checkSpace(angle, width)
 end
 
 function ObjectPlacer:placeObject()
+  if (self.cursor.placementAnimator) then return end
   local speed = 500;
   self.cursor:placeObject(speed)
   pd.timer.new(speed, function()
@@ -113,7 +125,23 @@ function ObjectPlacer:placeObject()
     self.particles:add(20)
     local planet = self.planet
     local angle = 270 - planet.planetRotation
-    Hut(angle, 0, planet)
+    self.objects[self.selectedObject](angle, 0, planet)
     planet:markDirty()
   end)
+end
+
+function ObjectPlacer:nextObject()
+  self.selectedObject += 1;
+  if (self.selectedObject > #self.objects) then
+    self.selectedObject = 1
+  end
+  self.cursor:setIcon(self.objects[self.selectedObject].icon)
+end
+
+function ObjectPlacer:prevObject()
+  self.selectedObject -= 1;
+  if (self.selectedObject < 1) then
+    self.selectedObject = #self.objects
+  end
+  self.cursor:setIcon(self.objects[self.selectedObject].icon)
 end

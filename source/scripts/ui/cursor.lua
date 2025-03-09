@@ -20,7 +20,7 @@ function Cursor:init()
   self:setIgnoresDrawOffset(true);
   self:add()
 
-  self.icon = Hut.icon;
+  self.icon = nil;
 
   self.centerX = self.width / 2;
   self.centerY = self.height / 2;
@@ -66,4 +66,9 @@ end
 function Cursor:placeObject(speed)
   self.placementAnimator = gfx.animator.new(speed, 0, -self.hoverHeight / 3, pd.easingFunctions.inBack);
   self.placementAnimator.reverses = true;
+end
+
+function Cursor:setIcon(icon)
+  self.icon = icon;
+  self:setImage(self.icon);
 end

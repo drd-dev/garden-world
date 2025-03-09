@@ -19,6 +19,7 @@ import "scripts/world/planet"
 --Planetary Objects
 import "scripts/pObj/_pObj"
 import "scripts/pObj/hut"
+import "scripts/pObj/bush"
 
 import "scripts/ui/objectPlacer"
 import "scripts/camera"
