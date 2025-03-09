@@ -4,6 +4,7 @@ local pd <const> = playdate
 local gfx <const> = pd.graphics
 local checkAngleForObjects <const> = Utils.checkAngleForObjects
 local getOrbitPosition <const> = Utils.getOrbitPosition
+local random <const> = math.random
 
 
 ---@class ObjectPlacer: _Sprite
@@ -31,18 +32,29 @@ function ObjectPlacer:init()
   self.particles:setDecay(3)
 
 
-  self.placeMode = true;
+  self.placeMode = false;
 
 
   --tools
   self.shovelImage = gfx.image.new("images/tools/shovel")
 
+
+
+  --sound
+  self.digSound = pd.sound.sampleplayer.new("sound/sfx/shovel/Harvesting Crit A")
+  self.digSound:setVolume(0.5)
+  self.plantSound = pd.sound.sampleplayer.new("sound/sfx/Plant A")
+
   self.objects = {
+    --plants
+    SunFlower,
+    Daisies,
+    BerryBush,
+    --decorations
     Hut,
     Bush,
-    StreetLamp,
     Grass,
-    Rock_001
+
   }
 
   self.selectedObject = 1
@@ -51,7 +63,7 @@ function ObjectPlacer:init()
   self.placementImg = gfx.image.new(100, 100, gfx.kColorClear)
 
   self.cursor = Cursor();
-  self.cursor:setIcon(self.objects[self.selectedObject].img);
+  self.cursor:setIcon(self.shovelImage)
 end
 
 function ObjectPlacer:update()
@@ -68,7 +80,8 @@ function ObjectPlacer:update()
     if (not self.placeMode) then
       self.cursor:setIcon(self.shovelImage)
     else
-      self.cursor:setIcon(self.objects[self.selectedObject].img)
+      self.cursor:setIcon(self.objects[self.selectedObject].icon, self.objects[self.selectedObject].cost,
+        self.objects[self.selectedObject].points)
     end
   end
 
@@ -76,8 +89,9 @@ function ObjectPlacer:update()
 
   --place object
   if (pd.buttonJustPressed(pd.kButtonA) and self:isVisible() and self.placeMode) then
-    local widthCheck = self.objects[self.selectedObject].img:getSize();
-    if (checkAngleForObjects(270 - self.planet.planetRotation, widthCheck, 2)) then
+    local object = self.objects[self.selectedObject]
+    local widthCheck = object.img:getSize();
+    if (POINTS >= object.cost and checkAngleForObjects(270 - self.planet.planetRotation, widthCheck, 2)) then
       self:placeObject()
     end
   end
@@ -110,14 +124,17 @@ end
 function ObjectPlacer:placeObject()
   if (self.cursor.placementAnimator) then return end
   local speed = 500;
+  local object = self.objects[self.selectedObject]
   self.cursor:animate(speed)
   pd.timer.new(speed, function()
     CAMERA:applyScreenShake(2, 100)
+    POINTS -= object.cost;
     self.particles:add(20)
     local planet = self.planet
     local angle = 270 - planet.planetRotation
-    self.objects[self.selectedObject](angle, 0, planet)
+    object(angle, 0, planet)
     planet:markDirty()
+    self.plantSound:play(1, 1)
   end)
 end
 
@@ -126,7 +143,8 @@ function ObjectPlacer:nextObject()
   if (self.selectedObject > #self.objects) then
     self.selectedObject = 1
   end
-  self.cursor:setIcon(self.objects[self.selectedObject].img)
+  self.cursor:setIcon(self.objects[self.selectedObject].icon, self.objects[self.selectedObject].cost,
+    self.objects[self.selectedObject].points)
 end
 
 function ObjectPlacer:prevObject()
@@ -134,7 +152,8 @@ function ObjectPlacer:prevObject()
   if (self.selectedObject < 1) then
     self.selectedObject = #self.objects
   end
-  self.cursor:setIcon(self.objects[self.selectedObject].img)
+  self.cursor:setIcon(self.objects[self.selectedObject].icon, self.objects[self.selectedObject].cost,
+    self.objects[self.selectedObject].points)
 end
 
 function ObjectPlacer:removeObject()
@@ -150,8 +169,14 @@ function ObjectPlacer:removeObject()
       for index, obj in ipairs(objs) do
         if (obj.removable) then
           obj:remove();
+          self.digSound:play(1, random(90, 110) * 0.01)
+          if (obj.cost) then
+            POINTS += obj.cost;
+          end
         end
       end
+    else
+      self.digSound:play(1, 0.75)
     end
   end);
 end

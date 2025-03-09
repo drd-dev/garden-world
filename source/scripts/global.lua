@@ -1,7 +1,7 @@
 CURRENT_ZOOM = 2;
-ZOOM_MAX = 1.8;
+ZOOM_MAX = 2.5;
 ZOOM_MIN = 0.1;
-
+POINTS = 1000;
 
 Z_INDEX = {
   BACKGROUND = 0,
@@ -17,3 +17,6 @@ SETTINGS = {
   CRANK_SENSITIVITY = 0.025,
   ZOOM_SPEED = 0.025,
 }
+
+
+ICON_IMAGETABLE = playdate.graphics.imagetable.new("images/ui/icons-table-16-16")

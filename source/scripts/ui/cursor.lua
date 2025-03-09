@@ -21,6 +21,7 @@ function Cursor:init()
   self:add()
 
   self.icon = nil;
+  self.sunImg = gfx.image.new("images/ui/sun")
 
   self.centerX = self.width / 2;
   self.centerY = self.height / 2;
@@ -71,9 +72,36 @@ function Cursor:animate(speed)
   self.placementAnimator.reverses = true;
 end
 
-function Cursor:setIcon(icon)
+function Cursor:setIcon(icon, cost, points)
   self.icon = icon;
 
-  self:setImage(self.icon);
+
+  local iconW, iconH = icon:getSize();
+
+  local img = gfx.image.new(iconW + 16, iconH + 20)
+
+
+  local imgW, imgH = img:getSize();
+
+  gfx.pushContext(img)
+  gfx.setImageDrawMode(gfx.kDrawModeFillWhite);
+  gfx.setColor(gfx.kColorWhite)
+
+  gfx.setFont(FONT.NanoSans)
+  if (cost) then
+    gfx.drawTextAligned("COST: " .. cost, imgW / 2, 1, kTextAlignment.center)
+  end
+
+  if (points) then
+    gfx.drawTextAligned("PROD: " .. points, imgW / 2, 10, kTextAlignment.center)
+  end
+  gfx.setImageDrawMode(gfx.kDrawModeCopy)
+  self.icon:draw(imgW / 2 - (iconW / 2), imgH - iconH);
+  gfx.popContext()
+
+  self:setImage(img);
+
   self:setImageDrawMode(gfx.kDrawModeXOR)
+
+  self.hoverHeight = 32 + (iconH / 2)
 end

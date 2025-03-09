@@ -22,7 +22,7 @@ function PObj:init(image, angle, distance, planet)
 
   self.planet = planet;
   self.angle = angle;
-  self.distance = (distance or 0) + (self.height / 2)
+  self.distance = (distance or 0) + (self.height / 2) + self.planet.lineWidth / 2 - 2
 
   --dither
   self.dither = nil;

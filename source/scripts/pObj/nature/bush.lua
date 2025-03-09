@@ -18,6 +18,8 @@ gfx.fillCircleAtPoint(8, 16, 8);
 gfx.popContext();
 
 Bush.img = img;
+Bush.icon = img;
+Bush.cost = 2;
 
 
 function Bush:init(angle, distance, planet)

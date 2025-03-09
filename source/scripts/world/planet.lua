@@ -56,7 +56,7 @@ function Planet:update()
   self.radius = self.size / 2;
   self.planetX = self.x + self.halfWidth;
 
-  self.planetY = self.centerY + (self.size * 0.55)
+  self.planetY = self.centerY + (self.size * 0.54)
 
   self:markDirty()
 end
@@ -93,6 +93,7 @@ function Planet:drawObjects()
     local distance = object.distance;
     ---@type _Image
     local image = object.image;
+    local imgW, imgH = image:getSize();
 
     if (object.dither) then
       image = image:fadedImage(object.ditherAmount, object.dither);
@@ -114,20 +115,30 @@ function Planet:drawObjects()
 
 
     image:drawRotated(object.x, object.y, a, CURRENT_ZOOM * object.flip, CURRENT_ZOOM);
+
+
+    if (object.points and object.pointAnimator and CURRENT_ZOOM > 0.75) then
+      gfx.setImageDrawMode(gfx.kDrawModeFillWhite);
+      gfx.drawTextAligned(object.points, object.x, (object.y - imgH - 5) - object.pointAnimator:currentValue(),
+        kTextAlignment.center);
+      gfx.setImageDrawMode(gfx.kDrawModeCopy);
+    end
+
+
+
     gfx.setColor(gfx.kColorWhite);
   end
 end
 
 function Planet:populatePlanet()
   local objs = {
-    Grass,
-    Grass,
-    Grass,
-    Grass,
-    Grass,
-    Bush,
     Rock_001,
-    Flower_001
+    Grass,
+    Grass,
+    Grass,
+    Grass,
+    Grass,
+    Grass,
   }
 
 

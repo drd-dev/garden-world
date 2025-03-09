@@ -26,8 +26,17 @@ import "scripts/pObj/nature/rock_001"
 import "scripts/pObj/nature/cloud"
 import "scripts/pObj/nature/flower_001"
 
+--plants
+import "scripts/pObj/plants/sunFlower"
+import "scripts/pObj/plants/daisies"
+import "scripts/pObj/plants/berryBush"
+
+
+-- UI
+import "fonts/fonts"
 import "scripts/ui/objectPlacer"
 import "scripts/camera"
+import "scripts/ui/resourceUI"
 
 
 local pd <const> = playdate
@@ -38,6 +47,10 @@ gfx.setBackgroundColor(gfx.kColorBlack)
 Planet(1000)
 ObjectPlacer();
 CAMERA = Camera();
+ResourceUI();
+
+local music = pd.sound.sampleplayer.new("sound/music/Casual Vol2 Plentiful Intensity 1"):play(0, 1)
+
 
 function pd.update()
   gfx.sprite.update()

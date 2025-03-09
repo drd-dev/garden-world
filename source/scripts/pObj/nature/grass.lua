@@ -10,6 +10,8 @@ local img <const> = gfx.imagetable.new("images/nature/grass")
 
 
 Grass.img = img:getImage(1);
+Grass.icon = img:getImage(1);
+Grass.cost = 1;
 
 
 function Grass:init(angle, distance, planet)
