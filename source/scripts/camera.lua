@@ -27,6 +27,11 @@ function Camera:update()
   end
 
   self.planet.planetRotation += cranks * self.crankSensitivity;
+  if (self.planet.planetRotation > 360) then
+    self.planet.planetRotation = 0;
+  elseif (self.planet.planetRotation < 0) then
+    self.planet.planetRotation = 360;
+  end
 
   if (pd.buttonIsPressed(pd.kButtonDown)) then
     CURRENT_ZOOM -= self.zoomSpeed;

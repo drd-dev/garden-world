@@ -29,4 +29,9 @@ end
 
 function Cloud:update()
   self.angle = self.angle + self.speed
+  if (self.angle > 360) then
+    self.angle = 0
+  elseif (self.angle < 0) then
+    self.angle = 360
+  end
 end

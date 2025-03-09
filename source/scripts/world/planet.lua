@@ -125,7 +125,6 @@ function Planet:drawObjects()
     end
 
 
-
     gfx.setColor(gfx.kColorWhite);
   end
 end

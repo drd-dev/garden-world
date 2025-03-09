@@ -5,6 +5,8 @@ local gfx <const> = pd.graphics
 local checkAngleForObjects <const> = Utils.checkAngleForObjects
 local getOrbitPosition <const> = Utils.getOrbitPosition
 local random <const> = math.random
+local deg <const> = math.deg
+local rad <const> = math.rad
 
 
 ---@class ObjectPlacer: _Sprite
@@ -91,7 +93,7 @@ function ObjectPlacer:update()
   if (pd.buttonJustPressed(pd.kButtonA) and self:isVisible() and self.placeMode) then
     local object = self.objects[self.selectedObject]
     local widthCheck = object.img:getSize();
-    if (POINTS >= object.cost and checkAngleForObjects(270 - self.planet.planetRotation, widthCheck, 2)) then
+    if (POINTS >= object.cost and checkAngleForObjects((270 - self.planet.planetRotation) % 360, widthCheck, 2)) then
       self:placeObject()
     end
   end
@@ -117,7 +119,7 @@ function ObjectPlacer:update()
 end
 
 function ObjectPlacer:handleCursor()
-  local x, y = getOrbitPosition(self.planet, 270 - self.planet.planetRotation, 32)
+  local x, y = getOrbitPosition(self.planet, (270 - self.planet.planetRotation) % 360, 32)
   self.cursor:moveTo(x, y)
 end
 
@@ -131,7 +133,8 @@ function ObjectPlacer:placeObject()
     POINTS -= object.cost;
     self.particles:add(20)
     local planet = self.planet
-    local angle = 270 - planet.planetRotation
+    local angle = (270 - planet.planetRotation) % 360;
+    print("planet rot", planet.planetRotation, "placing at", angle)
     object(angle, 0, planet)
     planet:markDirty()
     self.plantSound:play(1, 1)
@@ -161,7 +164,7 @@ function ObjectPlacer:removeObject()
   local speed = 500;
   self.cursor:animate(speed)
   pd.timer.new(speed, function()
-    local found, objs = checkAngleForObjects(270 - self.planet.planetRotation, 10, 0)
+    local found, objs = checkAngleForObjects((270 - self.planet.planetRotation) % 360, 10, 0)
 
     --objs forloop
     if (objs and #objs > 0) then
