@@ -64,7 +64,9 @@ function Cursor:update()
   self:setRotation(self.crankAcceleration)
 end
 
-function Cursor:placeObject(speed)
+---@param speed number animation speed
+function Cursor:animate(speed)
+  speed = speed or 500;
   self.placementAnimator = gfx.animator.new(speed, 0, -self.hoverHeight / 3, pd.easingFunctions.inBack);
   self.placementAnimator.reverses = true;
 end

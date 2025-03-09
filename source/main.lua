@@ -19,8 +19,12 @@ import "scripts/world/planet"
 --Planetary Objects
 import "scripts/pObj/_pObj"
 import "scripts/pObj/hut"
-import "scripts/pObj/bush"
 import "scripts/pObj/street_lamp"
+import "scripts/pObj/nature/grass"
+import "scripts/pObj/nature/bush"
+import "scripts/pObj/nature/rock_001"
+import "scripts/pObj/nature/cloud"
+import "scripts/pObj/nature/flower_001"
 
 import "scripts/ui/objectPlacer"
 import "scripts/camera"
@@ -31,7 +35,7 @@ local gfx <const> = pd.graphics
 
 gfx.setBackgroundColor(gfx.kColorBlack)
 
-PLANET = Planet(1000)
+Planet(1000)
 ObjectPlacer();
 CAMERA = Camera();
 

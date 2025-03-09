@@ -30,6 +30,9 @@ function PObj:init(image, angle, distance, planet)
 
 
   self.static = false;
+  self.noCollide = false;
+  self.flip = 1;
+  self.removable = true;
 
   self:moveTo(getOrbitPosition(self.planet, self.angle, self.distance * CURRENT_ZOOM))
 
@@ -40,6 +43,6 @@ function PObj:init(image, angle, distance, planet)
 end
 
 function PObj:remove()
-  table.remove(self.planet.objects, self.planetObjectIndex)
+  self.planet.objects[self.planetObjectIndex] = nil;
   PObj.super.remove(self)
 end

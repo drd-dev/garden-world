@@ -2,8 +2,11 @@ import "scripts/ui/cursor"
 
 local pd <const> = playdate
 local gfx <const> = pd.graphics
-local rad <const> = math.rad
---_@class ObjectPlacer: _Sprite
+local checkAngleForObjects <const> = Utils.checkAngleForObjects
+local getOrbitPosition <const> = Utils.getOrbitPosition
+
+
+---@class ObjectPlacer: _Sprite
 ObjectPlacer = class("ObjectPlacer").extends(gfx.sprite) or ObjectPlacer
 
 function ObjectPlacer:init()
@@ -20,7 +23,7 @@ function ObjectPlacer:init()
 
 
   --particles
-  self.particles = ParticleCircle(self.x, self.y + 130)
+  self.particles = ParticleCircle(self.x, self.y + 160)
   self.particles:setMode(Particles.modes.DECAY);
   self.particles:setSpeed(2, 5);
   self.particles:setSize(35, 55)
@@ -28,24 +31,24 @@ function ObjectPlacer:init()
   self.particles:setDecay(3)
 
 
+  self.placeMode = true;
+
+
+  --tools
+  self.shovelImage = gfx.image.new("images/tools/shovel")
 
   self.objects = {
     Hut,
     Bush,
-    StreetLamp
+    StreetLamp,
+    Grass,
+    Rock_001
   }
 
   self.selectedObject = 1
 
 
   self.placementImg = gfx.image.new(100, 100, gfx.kColorClear)
-  gfx.pushContext(self.cursorImg)
-  gfx.setColor(gfx.kColorWhite)
-  --draw a downward pointing arrow
-  gfx.drawLine(0, 0, 16, 32)
-  gfx.drawLine(32, 0, 16, 32)
-
-  gfx.popContext()
 
   self.cursor = Cursor();
   self.cursor:setIcon(self.objects[self.selectedObject].img);
@@ -61,18 +64,36 @@ function ObjectPlacer:update()
   end
 
   if (pd.buttonJustPressed(pd.kButtonB) and self:isVisible()) then
+    self.placeMode = not self.placeMode;
+    if (not self.placeMode) then
+      self.cursor:setIcon(self.shovelImage)
+    else
+      self.cursor:setIcon(self.objects[self.selectedObject].img)
+    end
+  end
+
+
+
+  --place object
+  if (pd.buttonJustPressed(pd.kButtonA) and self:isVisible() and self.placeMode) then
     local widthCheck = self.objects[self.selectedObject].img:getSize();
-    if (self:checkSpace(270 - self.planet.planetRotation, widthCheck, 2)) then
+    if (checkAngleForObjects(270 - self.planet.planetRotation, widthCheck, 2)) then
       self:placeObject()
     end
   end
 
 
-  if (pd.buttonJustPressed(pd.kButtonLeft) and self:isVisible()) then
+  --remove object
+  if (pd.buttonJustPressed(pd.kButtonA) and not self.placeMode) then
+    self:removeObject();
+  end
+
+
+  if (pd.buttonJustPressed(pd.kButtonLeft) and self:isVisible() and self.placeMode) then
     self:prevObject()
   end
 
-  if (pd.buttonJustPressed(pd.kButtonRight) and self:isVisible()) then
+  if (pd.buttonJustPressed(pd.kButtonRight) and self:isVisible() and self.placeMode) then
     self:nextObject()
   end
 
@@ -82,54 +103,14 @@ function ObjectPlacer:update()
 end
 
 function ObjectPlacer:handleCursor()
-  local x, y = Utils.getOrbitPosition(self.planet, 270 - self.planet.planetRotation, 32)
+  local x, y = getOrbitPosition(self.planet, 270 - self.planet.planetRotation, 32)
   self.cursor:moveTo(x, y)
-end
-
-function ObjectPlacer:draw(x, y, width, height)
-  gfx.clear(gfx.kColorClear)
-  gfx.setLineWidth(1)
-  gfx.setColor(gfx.kColorWhite)
-  gfx.drawRect(0, 0, self.width, 32)
-end
-
-function ObjectPlacer:checkSpace(angle, width, padding)
-  padding = padding or 1;
-  local planet = self.planet
-  local radius = planet.radius -- Planet's radius (must be defined)
-  local objects = planet.objects
-
-  -- Convert the new object's center angle from degrees to radians.
-  local angleRad = rad(angle)
-
-  -- Convert the new object's linear width to an angular half-width in radians.
-  local halfAngularWidth = (width + padding / 2) / radius
-  local minCheck = angleRad - halfAngularWidth
-  local maxCheck = angleRad + halfAngularWidth
-
-  for i = 1, #objects do
-    local obj = objects[i]
-    -- Convert the object's center angle from degrees to radians.
-    local objAngleRad = rad(obj.angle)
-    -- Convert the object's linear width to its angular half-width (radians).
-    local objHalfAngularWidth = (obj.width / 2) / radius
-    local objLeftAngle = objAngleRad - objHalfAngularWidth
-    local objRightAngle = objAngleRad + objHalfAngularWidth
-
-
-
-    -- Check if the angular intervals overlap.
-    if (maxCheck > objLeftAngle and minCheck < objRightAngle) then
-      return false
-    end
-  end
-  return true
 end
 
 function ObjectPlacer:placeObject()
   if (self.cursor.placementAnimator) then return end
   local speed = 500;
-  self.cursor:placeObject(speed)
+  self.cursor:animate(speed)
   pd.timer.new(speed, function()
     CAMERA:applyScreenShake(2, 100)
     self.particles:add(20)
@@ -154,4 +135,23 @@ function ObjectPlacer:prevObject()
     self.selectedObject = #self.objects
   end
   self.cursor:setIcon(self.objects[self.selectedObject].img)
+end
+
+function ObjectPlacer:removeObject()
+  if (self.cursor.placementAnimator) then return end
+  local speed = 500;
+  self.cursor:animate(speed)
+  pd.timer.new(speed, function()
+    local found, objs = checkAngleForObjects(270 - self.planet.planetRotation, 10, 0)
+
+    --objs forloop
+    if (objs and #objs > 0) then
+      self.particles:add(4)
+      for index, obj in ipairs(objs) do
+        if (obj.removable) then
+          obj:remove();
+        end
+      end
+    end
+  end);
 end

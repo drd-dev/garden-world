@@ -1,5 +1,5 @@
 CURRENT_ZOOM = 2;
-ZOOM_MAX = 1.5;
+ZOOM_MAX = 1.8;
 ZOOM_MIN = 0.1;
 
 

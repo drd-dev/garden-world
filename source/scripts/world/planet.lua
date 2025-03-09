@@ -1,6 +1,8 @@
 local pd <const> = playdate
 local gfx <const> = pd.graphics
 local getOrbitPosition <const> = Utils.getOrbitPosition
+local random <const> = math.random
+local checkAngleForObjects <const> = Utils.checkAngleForObjects
 
 
 ---@class Planet : _Sprite
@@ -8,6 +10,7 @@ Planet = class("Planet").extends(gfx.sprite) or Planet
 
 
 function Planet:init(size)
+  PLANET = self;
   Planet.super.init(self)
 
 
@@ -40,6 +43,9 @@ function Planet:init(size)
 
 
   self.objects = {}
+
+
+  self:populatePlanet();
 end
 
 function Planet:update()
@@ -50,7 +56,9 @@ function Planet:update()
   self.radius = self.size / 2;
   self.planetX = self.x + self.halfWidth;
 
-  self.planetY = self.centerY + (self.size * 0.53)
+  self.planetY = self.centerY + (self.size * 0.55)
+
+  self:markDirty()
 end
 
 function Planet:draw(x, y, width, height)
@@ -80,16 +88,15 @@ function Planet:drawPlanet(x, y, width, height)
 end
 
 function Planet:drawObjects()
-  for i, object in ipairs(self.objects) do
+  for i, object in pairs(self.objects) do
     local angle = object.angle;
     local distance = object.distance;
     ---@type _Image
     local image = object.image;
+
     if (object.dither) then
       image = image:fadedImage(object.ditherAmount, object.dither);
     end
-
-
 
 
     --change angle if not static
@@ -106,7 +113,44 @@ function Planet:drawObjects()
     object.y = y
 
 
-    image:drawRotated(object.x, object.y, a, CURRENT_ZOOM);
+    image:drawRotated(object.x, object.y, a, CURRENT_ZOOM * object.flip, CURRENT_ZOOM);
     gfx.setColor(gfx.kColorWhite);
+  end
+end
+
+function Planet:populatePlanet()
+  local objs = {
+    Grass,
+    Grass,
+    Grass,
+    Grass,
+    Grass,
+    Bush,
+    Rock_001,
+    Flower_001
+  }
+
+
+  local numObjects = 50;
+  for i = 1, numObjects do
+    local angle = math.random(0, 360);
+
+    --check the space
+    if (checkAngleForObjects(angle, 32, 2)) then
+      local object = nil;
+      local index = random(1, #objs);
+
+      object = objs[index](angle, 0, self);
+    end
+  end;
+
+
+
+  --add clouds
+  local cloudCount = 15;
+  for i = 1, cloudCount do
+    local angle = random(0, 360);
+    local distance = random(100, 200);
+    local cloud = Cloud(angle, distance, self);
   end
 end
