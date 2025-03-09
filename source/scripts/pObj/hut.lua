@@ -27,7 +27,7 @@ gfx.fillRect(10, h - 20, 12, 8)
 gfx.popContext();
 
 
-Hut.icon = img;
+Hut.img = img;
 
 
 function Hut:init(angle, distance, planet)

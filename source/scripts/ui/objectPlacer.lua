@@ -2,6 +2,7 @@ import "scripts/ui/cursor"
 
 local pd <const> = playdate
 local gfx <const> = pd.graphics
+local rad <const> = math.rad
 --_@class ObjectPlacer: _Sprite
 ObjectPlacer = class("ObjectPlacer").extends(gfx.sprite) or ObjectPlacer
 
@@ -46,7 +47,7 @@ function ObjectPlacer:init()
   gfx.popContext()
 
   self.cursor = Cursor();
-  self.cursor:setIcon(self.objects[self.selectedObject].icon);
+  self.cursor:setIcon(self.objects[self.selectedObject].img);
 end
 
 function ObjectPlacer:update()
@@ -59,7 +60,8 @@ function ObjectPlacer:update()
   end
 
   if (pd.buttonJustPressed(pd.kButtonB) and self:isVisible()) then
-    if (self:checkSpace(270 - self.planet.planetRotation, 32)) then
+    local widthCheck = self.objects[self.selectedObject].img:getSize();
+    if (self:checkSpace(270 - self.planet.planetRotation, widthCheck, 2)) then
       self:placeObject()
     end
   end
@@ -90,29 +92,36 @@ function ObjectPlacer:draw(x, y, width, height)
   gfx.drawRect(0, 0, self.width, 32)
 end
 
-function ObjectPlacer:checkSpace(angle, width)
+function ObjectPlacer:checkSpace(angle, width, padding)
+  padding = padding or 1;
   local planet = self.planet
+  local radius = planet.radius -- Planet's radius (must be defined)
   local objects = planet.objects
-  local halfWidth = width / 2
 
-  local minCheck = angle - halfWidth
-  local maxCheck = angle + halfWidth
+  -- Convert the new object's center angle from degrees to radians.
+  local angleRad = rad(angle)
 
+  -- Convert the new object's linear width to an angular half-width in radians.
+  local halfAngularWidth = (width + padding / 2) / radius
+  local minCheck = angleRad - halfAngularWidth
+  local maxCheck = angleRad + halfAngularWidth
 
   for i = 1, #objects do
     local obj = objects[i]
-    local objAngle = obj.angle
-    local objWidth = obj.width - 6
+    -- Convert the object's center angle from degrees to radians.
+    local objAngleRad = rad(obj.angle)
+    -- Convert the object's linear width to its angular half-width (radians).
+    local objHalfAngularWidth = (obj.width / 2) / radius
+    local objLeftAngle = objAngleRad - objHalfAngularWidth
+    local objRightAngle = objAngleRad + objHalfAngularWidth
 
-    local objLeftAngle = objAngle - objWidth / 2
-    local objRightAngle = objAngle + objWidth / 2
 
-    --make sure the object isnt in the bounds of the check
-    if (objLeftAngle < minCheck and objRightAngle > maxCheck and not obj.static) then
+
+    -- Check if the angular intervals overlap.
+    if (maxCheck > objLeftAngle and minCheck < objRightAngle) then
       return false
     end
   end
-
   return true
 end
 
@@ -135,7 +144,7 @@ function ObjectPlacer:nextObject()
   if (self.selectedObject > #self.objects) then
     self.selectedObject = 1
   end
-  self.cursor:setIcon(self.objects[self.selectedObject].icon)
+  self.cursor:setIcon(self.objects[self.selectedObject].img)
 end
 
 function ObjectPlacer:prevObject()
@@ -143,5 +152,5 @@ function ObjectPlacer:prevObject()
   if (self.selectedObject < 1) then
     self.selectedObject = #self.objects
   end
-  self.cursor:setIcon(self.objects[self.selectedObject].icon)
+  self.cursor:setIcon(self.objects[self.selectedObject].img)
 end
