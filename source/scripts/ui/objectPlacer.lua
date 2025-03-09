@@ -31,7 +31,8 @@ function ObjectPlacer:init()
 
   self.objects = {
     Hut,
-    Bush
+    Bush,
+    StreetLamp
   }
 
   self.selectedObject = 1

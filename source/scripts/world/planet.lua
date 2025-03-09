@@ -55,8 +55,8 @@ end
 
 function Planet:draw(x, y, width, height)
   gfx.clear()
-  self:drawObjects();
   self:drawPlanet(x, y, width, height);
+  self:drawObjects();
 end
 
 function Planet:drawPlanet(x, y, width, height)

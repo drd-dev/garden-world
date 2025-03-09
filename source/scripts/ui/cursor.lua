@@ -29,6 +29,7 @@ function Cursor:init()
 
   self:setImage(self.icon);
 
+
   self.hoverHeight = 48
 
   self.placementAnimator = nil
@@ -70,5 +71,7 @@ end
 
 function Cursor:setIcon(icon)
   self.icon = icon;
+
   self:setImage(self.icon);
+  self:setImageDrawMode(gfx.kDrawModeXOR)
 end

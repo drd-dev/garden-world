@@ -20,6 +20,7 @@ import "scripts/world/planet"
 import "scripts/pObj/_pObj"
 import "scripts/pObj/hut"
 import "scripts/pObj/bush"
+import "scripts/pObj/street_lamp"
 
 import "scripts/ui/objectPlacer"
 import "scripts/camera"
