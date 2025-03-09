@@ -1,7 +1,5 @@
 local pd <const> = playdate
 local gfx <const> = pd.graphics
-local lerp <const> = pd.math.lerp
-local clamp <const> = Utils.clamp
 local getOrbitPosition <const> = Utils.getOrbitPosition
 
 
@@ -14,8 +12,9 @@ function Planet:init(size)
 
 
   self:setCenter(0, 0);
-  self:moveTo(0, 0);
   self:setSize(pd.display:getSize());
+
+  self:moveTo(0, 0);
   self:setZIndex(Z_INDEX.PLANET);
   self:add()
 
@@ -39,48 +38,25 @@ function Planet:init(size)
 
   self.planetRotation = 0;
 
-  self.crankSensitivity = SETTINGS.CRANK_SENSITIVITY;
-  self.zoomSpeed = SETTINGS.ZOOM_SPEED;
 
   self.objects = {}
-
-
-  local count = 20;
-  for i = 0, 360, 360 / count do
-    Hut(i, 0, self);
-  end
 end
 
 function Planet:update()
-  local cranks = pd.getCrankChange();
-  if (cranks ~= 0) then
-    self:markDirty();
-  end
-
-  self.planetRotation += cranks * self.crankSensitivity;
-
-  if (pd.buttonIsPressed(pd.kButtonDown)) then
-    CURRENT_ZOOM -= self.zoomSpeed;
-    self:markDirty();
-  elseif (pd.buttonIsPressed(pd.kButtonUp)) then
-    CURRENT_ZOOM += self.zoomSpeed;
-    self:markDirty();
-  end
-
-  CURRENT_ZOOM = Utils.clamp(CURRENT_ZOOM, 0.25, 1.5);
+  CURRENT_ZOOM = Utils.clamp(CURRENT_ZOOM, ZOOM_MIN, ZOOM_MAX);
 
   --update planetary values
   self.size = self.startSize * CURRENT_ZOOM;
   self.radius = self.size / 2;
   self.planetX = self.x + self.halfWidth;
 
-  self.planetY = lerp(self.centerY, self.centerY + (self.size * 0.45), CURRENT_ZOOM - 0.25);
+  self.planetY = self.centerY + (self.size * 0.53)
 end
 
 function Planet:draw(x, y, width, height)
   gfx.clear()
-  self:drawPlanet(x, y, width, height);
   self:drawObjects();
+  self:drawPlanet(x, y, width, height);
 end
 
 function Planet:drawPlanet(x, y, width, height)
@@ -109,9 +85,28 @@ function Planet:drawObjects()
     local distance = object.distance;
     ---@type _Image
     local image = object.image;
+    if (object.dither) then
+      image = image:fadedImage(object.ditherAmount, object.dither);
+    end
+
+
+
+
+    --change angle if not static
+    local a = angle + 90;
+    if (not object.static) then
+      a += self.planetRotation
+    else
+      angle -= self.planetRotation
+    end
+
+
     local x, y = getOrbitPosition(self, angle, distance * CURRENT_ZOOM);
+    object.x = x
+    object.y = y
 
 
-    image:drawRotated(x, y, angle + 90 + self.planetRotation, CURRENT_ZOOM);
+    image:drawRotated(object.x, object.y, a, CURRENT_ZOOM);
+    gfx.setColor(gfx.kColorWhite);
   end
 end

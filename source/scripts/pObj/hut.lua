@@ -19,7 +19,7 @@ gfx.fillRect(10, 8, 8, 24)
 
 --door
 gfx.setColor(gfx.kColorBlack)
-gfx.fillRect(28, h - 20, w - 20 * 2, 20)
+gfx.fillRect(28, h - 20, w - 20 * 2, 18)
 
 --window
 gfx.fillRect(10, h - 20, 12, 8)
@@ -27,6 +27,7 @@ gfx.fillRect(10, h - 20, 12, 8)
 gfx.popContext();
 
 
+Hut.icon = img;
 
 
 function Hut:init(angle, distance, planet)

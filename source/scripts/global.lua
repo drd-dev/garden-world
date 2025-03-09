@@ -1,10 +1,15 @@
 CURRENT_ZOOM = 2;
+ZOOM_MAX = 1.5;
+ZOOM_MIN = 0.1;
 
 
 Z_INDEX = {
   BACKGROUND = 0,
   P_OBJS = 10,
   PLANET = 20,
+  UI_BACK = 100,
+  UI_MID = 101,
+  UI_FRONT = 102,
 }
 
 

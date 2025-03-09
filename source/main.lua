@@ -9,7 +9,8 @@ import "CoreLibs/crank"
 import "CoreLibs/animation"
 import "CoreLibs/nineslice"
 
-
+--libraries
+import "scripts/libraries/pdParticles"
 
 import "scripts/utils/utils"
 import "scripts/global"
@@ -19,17 +20,23 @@ import "scripts/world/planet"
 import "scripts/pObj/_pObj"
 import "scripts/pObj/hut"
 
+import "scripts/ui/objectPlacer"
+import "scripts/camera"
+
 
 local pd <const> = playdate
 local gfx <const> = pd.graphics
 
 gfx.setBackgroundColor(gfx.kColorBlack)
 
-Planet(500)
-
+PLANET = Planet(1000)
+ObjectPlacer();
+CAMERA = Camera();
 
 function pd.update()
   gfx.sprite.update()
+  pd.timer.updateTimers()
+  Particles:update()
 
   pd.drawFPS(0, 0)
 end
