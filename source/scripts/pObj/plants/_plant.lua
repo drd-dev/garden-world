@@ -5,6 +5,10 @@ local gfx <const> = pd.graphics
 ---@overload fun(imagetable: _ImageTable, angle: number, distance: number, planet: Planet, water: number)
 Plant = class("Plant").extends("PObj") or Plant;
 
+Plant.name = "New Plant"
+Plant.cost = 25;
+Plant.points = 1;
+Plant.water = 20;
 
 function Plant:init(imagetable, angle, distance, planet, water)
   Plant.super.init(self, imagetable:getImage(1), angle, distance, planet)

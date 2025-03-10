@@ -1,7 +1,7 @@
-name=New Game
+name=Garden World
 author=Dylan Doughertry (DRD-DEV)
-description=A new Game
-bundleID=dev.drd.new.game
-imagePath=
+description=Grow plants and decorate your tiny planet
+bundleID=dev.drd.gardenworld
+imagePath=metadata
 version=1.0
 buildNumber=1

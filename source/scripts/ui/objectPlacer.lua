@@ -23,7 +23,7 @@ function ObjectPlacer:init()
 
   self.planet = PLANET
 
-  self:setSize(240, 38)
+  self:setSize(120, 120)
   self:setZIndex(Z_INDEX.UI_BACK)
   self:setCenter(0.5, 0)
   self:moveTo(pd.display:getWidth() / 2, 0)
@@ -52,10 +52,14 @@ function ObjectPlacer:init()
 
 
   --sound
-  self.digSound = pd.sound.sampleplayer.new("sound/sfx/shovel/Harvesting Crit A")
+  self.digSound = pd.sound.sampleplayer.new("sound/sfx/shovel/Dig A")
   self.digSound:setVolume(0.5)
   self.plantSound = pd.sound.sampleplayer.new("sound/sfx/Plant A")
   self.waterSound = pd.sound.sampleplayer.new("sound/sfx/Water Splash")
+  self.toolSound = pd.sound.sampleplayer.new("sound/sfx/sfx_menu_move6")
+  self.toolSound:setVolume(0.25)
+  self.selectSound = pd.sound.sampleplayer.new("sound/sfx/sfx_menu_move")
+  self.selectSound:setVolume(0.25)
 
   self.plants = {
     --plants
@@ -91,7 +95,7 @@ function ObjectPlacer:draw(x, y, width, height)
   gfx.setColor(gfx.kColorBlack)
   gfx.fillRect(x + 1, y + 1, width - 2, boxHeight - 2)
 
-  gfx.setImageDrawMode(gfx.kDrawModeFillWhite)
+  gfx.setImageDrawMode(gfx.kDrawModeNXOR)
   local text = ""
   if (self.mode == TOOL_MODE.PLANT) then
     text = "PLANT"
@@ -117,14 +121,22 @@ function ObjectPlacer:draw(x, y, width, height)
     object = self.decorations[self.selctedDecoration]
   end
 
+
+  local itemInfoY = height - 64
+
   if (object) then
-    self.sunImg:draw(x + 6, y + boxHeight / 2 - 8)
-    gfx.drawTextAligned(object.cost, x + 24, y + boxHeight / 2 - 4, kTextAlignment.left)
+    if (object.name) then
+      gfx.drawTextAligned(object.name, x + width / 2, itemInfoY - 14, kTextAlignment.center)
+    end
+    gfx.drawTextAligned("COST: $ " .. object.cost, x + width / 2, itemInfoY, kTextAlignment.center)
 
 
     if (object.points) then
-      ICON_IMAGETABLE:getImage(4):draw(x + width - 32, y + boxHeight / 2 - 10)
-      gfx.drawTextAligned(object.points, x + width - 16, y + boxHeight / 2 - 4, kTextAlignment.left)
+      gfx.drawTextAligned("PROD: $ " .. object.points .. "/s", x + width / 2, itemInfoY + 14, kTextAlignment.center)
+    end
+
+    if (object.water) then
+      gfx.drawTextAligned("WATR: ✦ " .. object.water, x + width / 2, itemInfoY + 28, kTextAlignment.center)
     end
   end
 
@@ -132,7 +144,7 @@ function ObjectPlacer:draw(x, y, width, height)
 end
 
 function ObjectPlacer:update()
-  if (CURRENT_ZOOM > ZOOM_MAX - 0.75) then
+  if (CURRENT_ZOOM > ZOOM_MAX - 1) then
     self:setVisible(true)
     self.cursor:setVisible(true)
   else
@@ -156,6 +168,8 @@ function ObjectPlacer:update()
     elseif (self.mode == TOOL_MODE.DECORATE) then
       self.cursor:setIcon(self.decorations[self.selctedDecoration].icon, true);
     end
+
+    self.toolSound:play()
   end
 
 
@@ -192,18 +206,22 @@ function ObjectPlacer:update()
 
   if (pd.buttonJustPressed(pd.kButtonLeft) and self:isVisible() and self.mode == TOOL_MODE.PLANT) then
     self:prevObject()
+    self.selectSound:play(1, 0.75)
   end
 
   if (pd.buttonJustPressed(pd.kButtonRight) and self:isVisible() and self.mode == TOOL_MODE.PLANT) then
     self:nextObject()
+    self.selectSound:play(1, 1)
   end
 
   if (pd.buttonJustPressed(pd.kButtonLeft) and self:isVisible() and self.mode == TOOL_MODE.DECORATE) then
     self:prevDecoration()
+    self.selectSound:play(1, 0.75)
   end
 
   if (pd.buttonJustPressed(pd.kButtonRight) and self:isVisible() and self.mode == TOOL_MODE.DECORATE) then
     self:nextDecoration()
+    self.selectSound:play(1, 1)
   end
 
   self:markDirty();

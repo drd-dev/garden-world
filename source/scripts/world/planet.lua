@@ -62,7 +62,7 @@ function Planet:update()
 end
 
 function Planet:draw(x, y, width, height)
-  gfx.clear()
+  -- gfx.clear(gfx.kColorClear)
   self:drawPlanet(x, y, width, height);
   self:drawObjects();
 end

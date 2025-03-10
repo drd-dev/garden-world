@@ -43,7 +43,15 @@ import "scripts/ui/resourceUI"
 local pd <const> = playdate
 local gfx <const> = pd.graphics
 
-gfx.setBackgroundColor(gfx.kColorBlack)
+-- gfx.setBackgroundColor(gfx.kColorBlack)
+local backgroundImage = gfx.image.new("images/background")
+assert(backgroundImage, "No backgroundImage")
+
+gfx.sprite.setBackgroundDrawingCallback(function(x, y, width, height)
+  backgroundImage:draw(0, 0)
+end)
+
+
 
 Planet(1000)
 ObjectPlacer();
