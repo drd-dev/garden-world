@@ -1,5 +1,5 @@
 # GARDEN WORLD
- ![Garden world title screen](https://img.itch.zone/aW1hZ2UvMzM4Njk4OS8yMDIyMDE4Mi5naWY=/347x500/LZS1g5.gif)
+ ![Garden world title screen](https://img.itch.zone/aW1hZ2UvMzM4Njk4OS8yMDIyMDQ1Mi5naWY=/347x500/nnoRJQ.gif)
 
 
 ### Oh no! You're stranded on a small desolate moon! Good thing you brought your gardening tools!
