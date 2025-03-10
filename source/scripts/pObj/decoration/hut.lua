@@ -13,6 +13,7 @@ Hut = class("Hut").extends("PObj") or Hut;
 local img <const> = gfx.image.new("images/buildings/hut")
 
 
+Hut.name = "Home"
 Hut.img = img;
 Hut.icon = img;
 Hut.cost = 100;

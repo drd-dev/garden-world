@@ -2,7 +2,7 @@ local pd <const> = playdate
 local gfx <const> = pd.graphics
 
 ---@class Plant : PObj
----@overload fun(imagetable: _ImageTable, angle: number, distance: number, planet: Planet, water: number)
+---@overload fun(imagetable: _ImageTable, angle: number, distance: number, planet: Planet, water: number, growTime:number)
 Plant = class("Plant").extends("PObj") or Plant;
 
 Plant.name = "New Plant"
@@ -10,11 +10,11 @@ Plant.cost = 25;
 Plant.points = 1;
 Plant.water = 20;
 
-function Plant:init(imagetable, angle, distance, planet, water)
+function Plant:init(imagetable, angle, distance, planet, water, growTime)
   Plant.super.init(self, imagetable:getImage(1), angle, distance, planet)
 
   self.imagetable = imagetable;
-  self.growTime = 10000;
+  self.growTime = growTime or 10000;
   self.points = 2;
   self.pointTime = 1000;
   self.water = water or 20; -- the number of time a plant will produce before needing to be watered.

@@ -17,6 +17,7 @@ gfx.fillCircleAtPoint(8, 16, 8);
 
 gfx.popContext();
 
+Bush.name = "Bush"
 Bush.img = img;
 Bush.icon = img;
 Bush.cost = 2;

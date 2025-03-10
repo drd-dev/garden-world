@@ -119,7 +119,7 @@ function Planet:drawObjects()
 
     if (object.points and object.pointAnimator and CURRENT_ZOOM > 0.75) then
       gfx.setImageDrawMode(gfx.kDrawModeFillWhite);
-      gfx.drawTextAligned(object.points, object.x, (object.y - imgH - 5) - object.pointAnimator:currentValue(),
+      gfx.drawTextAligned("$" .. object.points, object.x, (object.y - imgH - 5) - object.pointAnimator:currentValue(),
         kTextAlignment.center);
       gfx.setImageDrawMode(gfx.kDrawModeCopy);
     elseif (object.currentWater and object.currentWater <= 0 and CURRENT_ZOOM > 0.75) then

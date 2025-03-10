@@ -14,9 +14,8 @@ Daisies.water = 25;
 Daisies.name = "DAISIES"
 
 function Daisies:init(angle, distance, planet)
-  Daisies.super.init(self, imgtable, angle, distance, planet, Daisies.water)
+  Daisies.super.init(self, imgtable, angle, distance, planet, Daisies.water, 10000)
 
-  self.growTime = 10000;
-  self.points = 2;
+  self.points = Daisies.points;
   self.pointTime = 1000;
 end

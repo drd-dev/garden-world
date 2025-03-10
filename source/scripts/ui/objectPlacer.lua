@@ -5,6 +5,7 @@ local gfx <const> = pd.graphics
 local checkAngleForObjects <const> = Utils.checkAngleForObjects
 local getOrbitPosition <const> = Utils.getOrbitPosition
 local random <const> = math.random
+local caps <const> = string.upper
 
 
 
@@ -66,13 +67,20 @@ function ObjectPlacer:init()
     SunFlower,
     Daisies,
     BerryBush,
+    Carrot,
+    Oak,
+    Apple
   }
 
   self.decorations = {
-    Hut,
+    Fence,
+    Bench,
     Bush,
     Grass,
-    StreetLamp
+    Hut,
+    StreetLamp,
+    Cat,
+    IcyStatue
   }
 
   self.selctedPlant = 1
@@ -122,11 +130,12 @@ function ObjectPlacer:draw(x, y, width, height)
   end
 
 
+  gfx.setImageDrawMode(gfx.kDrawModeNXOR)
   local itemInfoY = height - 76
 
   if (object) then
     if (object.name) then
-      gfx.drawTextAligned(object.name, x + width / 2, itemInfoY - 14, kTextAlignment.center)
+      gfx.drawTextAligned(caps(object.name), x + width / 2, itemInfoY - 14, kTextAlignment.center)
     end
     gfx.drawTextAligned("COST: $ " .. object.cost, x + width / 2, itemInfoY, kTextAlignment.center)
 

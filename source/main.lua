@@ -16,21 +16,30 @@ import "scripts/utils/utils"
 import "scripts/global"
 import "scripts/world/planet"
 
---Planetary Objects
+--nature
 import "scripts/pObj/_pObj"
-import "scripts/pObj/hut"
-import "scripts/pObj/street_lamp"
 import "scripts/pObj/nature/grass"
-import "scripts/pObj/nature/bush"
 import "scripts/pObj/nature/rock_001"
 import "scripts/pObj/nature/cloud"
-import "scripts/pObj/nature/flower_001"
+
+
+--decorations
+import "scripts/pObj/decoration/hut"
+import "scripts/pObj/decoration/street_lamp"
+import "scripts/pObj/decoration/bush"
+import "scripts/pObj/decoration/bench"
+import "scripts/pObj/decoration/fence"
+import "scripts/pObj/decoration/icyStatue"
+import "scripts/pObj/decoration/cat"
 
 --plants
 import "scripts/pObj/plants/_plant"
 import "scripts/pObj/plants/sunFlower"
 import "scripts/pObj/plants/daisies"
 import "scripts/pObj/plants/berryBush"
+import "scripts/pObj/plants/carrot"
+import "scripts/pObj/plants/oak"
+import "scripts/pObj/plants/apple"
 
 
 -- UI

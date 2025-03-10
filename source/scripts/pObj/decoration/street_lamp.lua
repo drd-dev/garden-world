@@ -10,6 +10,7 @@ local imgTable <const> = gfx.imagetable.new("images/decoration/street_lamp")
 local img <const> = imgTable:getImage(1)
 
 
+StreetLamp.name = "Lamp"
 StreetLamp.img = img;
 StreetLamp.icon = img;
 StreetLamp.cost = 50;

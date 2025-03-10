@@ -9,14 +9,12 @@ local imgtable <const> = gfx.imagetable.new("images/plants/BerryBush")
 BerryBush.img = imgtable:getImage(1);
 BerryBush.icon = ICON_IMAGETABLE:getImage(3);
 BerryBush.cost = 100;
-BerryBush.points = 1;
-BerryBush.water = 50;
+BerryBush.points = 2;
+BerryBush.water = 75;
 BerryBush.name = "BERRY BUSH"
 
 function BerryBush:init(angle, distance, planet)
-  BerryBush.super.init(self, imgtable, angle, distance, planet, BerryBush.water)
-
-  self.growTime = 20000;
+  BerryBush.super.init(self, imgtable, angle, distance, planet, BerryBush.water, 20000)
   self.points = BerryBush.points;
   self.pointTime = 1000;
 end
