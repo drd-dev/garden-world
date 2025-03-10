@@ -100,9 +100,6 @@ function pd.update()
 
   music:setVolume(CURRENT_ZOOM / ZOOM_MAX)
   wind:setVolume(0.5 - (CURRENT_ZOOM / ZOOM_MAX))
-
-  pd.drawFPS(0, 0)
-
   if (mainMenu == true and pd.buttonJustPressed(pd.kButtonA)) then
     if (controlsShown == false) then
       controlsShown = true;
