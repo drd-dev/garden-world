@@ -108,7 +108,7 @@ function Cursor:setIcon(icon, arrows)
 
   self:setImage(img);
 
-  self:setImageDrawMode(gfx.kDrawModeXOR)
+  -- self:setImageDrawMode(gfx.kDrawMode)
 
   self.hoverHeight = 12 + (iconH / 2)
 end

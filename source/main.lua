@@ -53,10 +53,31 @@ end)
 
 
 
+local mainMenu = true;
+local controlsShown = false;
+local mainMenuImage = gfx.image.new("images/ui/mainMenu")
+local controlsImage = gfx.image.new("images/ui/controls")
+local mainMenuSprite = gfx.sprite.new(mainMenuImage)
+mainMenuSprite:setCenter(0, 0)
+mainMenuSprite:moveTo(0, 0)
+mainMenuSprite:setZIndex(Z_INDEX.UI_FRONT)
+mainMenuSprite:add()
+
+
+local function StartGame()
+  print("starting game")
+  local sound = pd.sound.sampleplayer.new("sound/sfx/sfx_menu_start.wav")
+  sound:setVolume(0.25)
+  sound:play(1, 1)
+  mainMenuSprite:remove()
+  ObjectPlacer();
+  CAMERA = Camera();
+  ResourceUI();
+end
+
+
 Planet(1000)
-ObjectPlacer();
-CAMERA = Camera();
-ResourceUI();
+
 
 local music = pd.sound.sampleplayer.new("sound/music/KleptoLindaMountainA")
 local wind = pd.sound.sampleplayer.new("sound/music/Eerie Wind Loop A")
@@ -72,4 +93,14 @@ function pd.update()
   wind:setVolume(0.5 - (CURRENT_ZOOM / ZOOM_MAX))
 
   pd.drawFPS(0, 0)
+
+  if (mainMenu == true and pd.buttonJustPressed(pd.kButtonA)) then
+    if (controlsShown == false) then
+      controlsShown = true;
+      mainMenuSprite:setImage(controlsImage)
+    else
+      mainMenu = false;
+      StartGame();
+    end
+  end
 end

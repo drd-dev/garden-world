@@ -21,7 +21,6 @@ function Grass:init(angle, distance, planet)
 
 
   self.animator = gfx.animation.loop.new(250, img, true)
-  self.noCollide = true;
 end
 
 function Grass:update()

@@ -95,7 +95,7 @@ function ObjectPlacer:draw(x, y, width, height)
   gfx.setColor(gfx.kColorBlack)
   gfx.fillRect(x + 1, y + 1, width - 2, boxHeight - 2)
 
-  gfx.setImageDrawMode(gfx.kDrawModeNXOR)
+  gfx.setImageDrawMode(gfx.kDrawModeFillWhite)
   local text = ""
   if (self.mode == TOOL_MODE.PLANT) then
     text = "PLANT"
@@ -122,7 +122,7 @@ function ObjectPlacer:draw(x, y, width, height)
   end
 
 
-  local itemInfoY = height - 64
+  local itemInfoY = height - 76
 
   if (object) then
     if (object.name) then
@@ -180,6 +180,8 @@ function ObjectPlacer:update()
     local widthCheck = object.img:getSize();
     if (POINTS >= object.cost and checkAngleForObjects((270 - self.planet.planetRotation) % 360, widthCheck, 2)) then
       self:placeObject()
+    else
+      self.selectSound:play(1, 0.25)
     end
   end
 
@@ -188,6 +190,8 @@ function ObjectPlacer:update()
     local widthCheck = object.img:getSize();
     if (POINTS >= object.cost and checkAngleForObjects((270 - self.planet.planetRotation) % 360, widthCheck, 2)) then
       self:placeDecoration()
+    else
+      self.selectSound:play(1, 0.25)
     end
   end
 
