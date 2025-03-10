@@ -9,6 +9,8 @@ StreetLamp = class("StreetLamp").extends("PObj") or StreetLamp;
 local img <const> = gfx.image.new("images/decoration/street_lamp_001")
 
 StreetLamp.img = img;
+StreetLamp.icon = img;
+StreetLamp.cost = 50;
 
 
 function StreetLamp:init(angle, distance, planet)

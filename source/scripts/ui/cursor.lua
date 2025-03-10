@@ -72,13 +72,14 @@ function Cursor:animate(speed)
   self.placementAnimator.reverses = true;
 end
 
-function Cursor:setIcon(icon, cost, points)
+function Cursor:setIcon(icon, arrows)
+  arrows = arrows or false;
   self.icon = icon;
 
 
   local iconW, iconH = icon:getSize();
 
-  local img = gfx.image.new(iconW + 16, iconH + 20)
+  local img = gfx.image.new(iconW + 32, iconH)
 
 
   local imgW, imgH = img:getSize();
@@ -97,11 +98,17 @@ function Cursor:setIcon(icon, cost, points)
   end
   gfx.setImageDrawMode(gfx.kDrawModeCopy)
   self.icon:draw(imgW / 2 - (iconW / 2), imgH - iconH);
+
+
+  if (arrows) then
+    gfx.drawTriangle(0, imgH / 2, 8, imgH / 2 - 4, 8, imgH / 2 + 4)
+    gfx.drawTriangle(imgW, imgH / 2, imgW - 8, imgH / 2 - 4, imgW - 8, imgH / 2 + 4)
+  end
   gfx.popContext()
 
   self:setImage(img);
 
   self:setImageDrawMode(gfx.kDrawModeXOR)
 
-  self.hoverHeight = 32 + (iconH / 2)
+  self.hoverHeight = 12 + (iconH / 2)
 end
