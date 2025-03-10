@@ -80,7 +80,10 @@ function ObjectPlacer:init()
     Hut,
     StreetLamp,
     Cat,
-    IcyStatue
+    IcyStatue,
+    SwingSet,
+    TrashCan,
+    Fountain
   }
 
   self.selctedPlant = 1

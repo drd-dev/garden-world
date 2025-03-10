@@ -16,7 +16,7 @@ local img <const> = gfx.image.new("images/buildings/hut")
 Hut.name = "Home"
 Hut.img = img;
 Hut.icon = img;
-Hut.cost = 100;
+Hut.cost = 250;
 
 
 function Hut:init(angle, distance, planet)

@@ -31,6 +31,9 @@ import "scripts/pObj/decoration/bench"
 import "scripts/pObj/decoration/fence"
 import "scripts/pObj/decoration/icyStatue"
 import "scripts/pObj/decoration/cat"
+import "scripts/pObj/decoration/swingSet"
+import "scripts/pObj/decoration/trashcan"
+import "scripts/pObj/decoration/fountain"
 
 --plants
 import "scripts/pObj/plants/_plant"
