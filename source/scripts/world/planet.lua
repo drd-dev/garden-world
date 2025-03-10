@@ -122,6 +122,8 @@ function Planet:drawObjects()
       gfx.drawTextAligned(object.points, object.x, (object.y - imgH - 5) - object.pointAnimator:currentValue(),
         kTextAlignment.center);
       gfx.setImageDrawMode(gfx.kDrawModeCopy);
+    elseif (object.currentWater and object.currentWater <= 0 and CURRENT_ZOOM > 0.75) then
+      ICON_IMAGETABLE:getImage(4):drawRotated(object.x, (object.y - imgH - 8), 0);
     end
 
 

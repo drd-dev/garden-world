@@ -5,9 +5,14 @@ local gfx <const> = pd.graphics
 local checkAngleForObjects <const> = Utils.checkAngleForObjects
 local getOrbitPosition <const> = Utils.getOrbitPosition
 local random <const> = math.random
-local deg <const> = math.deg
-local rad <const> = math.rad
 
+
+
+TOOL_MODE = {
+  SHOVEL = 1,
+  PLACE = 2,
+  WATER = 3
+}
 
 ---@class ObjectPlacer: _Sprite
 ObjectPlacer = class("ObjectPlacer").extends(gfx.sprite) or ObjectPlacer
@@ -34,11 +39,13 @@ function ObjectPlacer:init()
   self.particles:setDecay(3)
 
 
-  self.placeMode = false;
+
+  self.mode = TOOL_MODE.SHOVEL;
 
 
   --tools
   self.shovelImage = gfx.image.new("images/tools/shovel")
+  self.wateringCanImage = gfx.image.new("images/tools/wateringCan")
 
 
 
@@ -46,6 +53,7 @@ function ObjectPlacer:init()
   self.digSound = pd.sound.sampleplayer.new("sound/sfx/shovel/Harvesting Crit A")
   self.digSound:setVolume(0.5)
   self.plantSound = pd.sound.sampleplayer.new("sound/sfx/Plant A")
+  self.waterSound = pd.sound.sampleplayer.new("sound/sfx/Water Splash")
 
   self.objects = {
     --plants
@@ -78,10 +86,17 @@ function ObjectPlacer:update()
   end
 
   if (pd.buttonJustPressed(pd.kButtonB) and self:isVisible()) then
-    self.placeMode = not self.placeMode;
-    if (not self.placeMode) then
+    self.mode += 1;
+    if (self.mode > 3) then
+      self.mode = 1
+    end
+
+
+    if (self.mode == TOOL_MODE.SHOVEL) then
       self.cursor:setIcon(self.shovelImage)
-    else
+    elseif (self.mode == TOOL_MODE.WATER) then
+      self.cursor:setIcon(self.wateringCanImage)
+    elseif (self.mode == TOOL_MODE.PLACE) then
       self.cursor:setIcon(self.objects[self.selectedObject].icon, self.objects[self.selectedObject].cost,
         self.objects[self.selectedObject].points)
     end
@@ -90,7 +105,7 @@ function ObjectPlacer:update()
 
 
   --place object
-  if (pd.buttonJustPressed(pd.kButtonA) and self:isVisible() and self.placeMode) then
+  if (pd.buttonJustPressed(pd.kButtonA) and self:isVisible() and self.mode == TOOL_MODE.PLACE) then
     local object = self.objects[self.selectedObject]
     local widthCheck = object.img:getSize();
     if (POINTS >= object.cost and checkAngleForObjects((270 - self.planet.planetRotation) % 360, widthCheck, 2)) then
@@ -100,16 +115,22 @@ function ObjectPlacer:update()
 
 
   --remove object
-  if (pd.buttonJustPressed(pd.kButtonA) and not self.placeMode) then
+  if (pd.buttonJustPressed(pd.kButtonA) and self.mode == TOOL_MODE.SHOVEL) then
     self:removeObject();
   end
 
 
-  if (pd.buttonJustPressed(pd.kButtonLeft) and self:isVisible() and self.placeMode) then
+  --water object
+  if (pd.buttonJustPressed(pd.kButtonA) and self.mode == TOOL_MODE.WATER) then
+    self:water();
+  end
+
+
+  if (pd.buttonJustPressed(pd.kButtonLeft) and self:isVisible() and self.mode == TOOL_MODE.PLACE) then
     self:prevObject()
   end
 
-  if (pd.buttonJustPressed(pd.kButtonRight) and self:isVisible() and self.placeMode) then
+  if (pd.buttonJustPressed(pd.kButtonRight) and self:isVisible() and self.mode == TOOL_MODE.PLACE) then
     self:nextObject()
   end
 
@@ -134,7 +155,6 @@ function ObjectPlacer:placeObject()
     self.particles:add(20)
     local planet = self.planet
     local angle = (270 - planet.planetRotation) % 360;
-    print("planet rot", planet.planetRotation, "placing at", angle)
     object(angle, 0, planet)
     planet:markDirty()
     self.plantSound:play(1, 1)
@@ -180,6 +200,26 @@ function ObjectPlacer:removeObject()
       end
     else
       self.digSound:play(1, 0.75)
+    end
+  end);
+end
+
+function ObjectPlacer:water()
+  if (self.cursor.placementAnimator) then return end
+  local speed = 500;
+  self.cursor:animate(speed)
+
+  pd.timer.new(speed, function()
+    local found, objs = checkAngleForObjects((270 - self.planet.planetRotation) % 360, 20, 0)
+
+    if (objs and #objs > 0) then
+      self.waterSound:play(1, 1)
+      self.particles:add(4)
+      for index, obj in ipairs(objs) do
+        if (obj:isa(Plant)) then
+          obj:waterPlant();
+        end
+      end
     end
   end);
 end

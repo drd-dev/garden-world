@@ -27,6 +27,7 @@ import "scripts/pObj/nature/cloud"
 import "scripts/pObj/nature/flower_001"
 
 --plants
+import "scripts/pObj/plants/_plant"
 import "scripts/pObj/plants/sunFlower"
 import "scripts/pObj/plants/daisies"
 import "scripts/pObj/plants/berryBush"
@@ -49,13 +50,18 @@ ObjectPlacer();
 CAMERA = Camera();
 ResourceUI();
 
-local music = pd.sound.sampleplayer.new("sound/music/Casual Vol2 Plentiful Intensity 1"):play(0, 1)
-
+local music = pd.sound.sampleplayer.new("sound/music/KleptoLindaMountainA")
+local wind = pd.sound.sampleplayer.new("sound/music/Eerie Wind Loop A")
+music:play(0, 1)
+wind:play(0, 1);
 
 function pd.update()
   gfx.sprite.update()
   pd.timer.updateTimers()
   Particles:update()
+
+  music:setVolume(CURRENT_ZOOM / ZOOM_MAX)
+  wind:setVolume(0.5 - (CURRENT_ZOOM / ZOOM_MAX))
 
   pd.drawFPS(0, 0)
 end
