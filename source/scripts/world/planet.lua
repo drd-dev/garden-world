@@ -73,8 +73,12 @@ function Planet:drawPlanet(x, y, width, height)
   --outer edge
   gfx.drawCircleAtPoint(self.planetX, self.planetY, self.radius);
 
+  gfx.setColor(gfx.kColorBlack);
+  gfx.fillCircleAtPoint(self.planetX, self.planetY, self.radius);
+
   --mantle and layers
-  gfx.setDitherPattern(0.5, gfx.image.kDitherTypeBayer8x8);
+  gfx.setColor(gfx.kColorWhite);
+  gfx.setDitherPattern(0.75, gfx.image.kDitherTypeBayer8x8);
   gfx.fillCircleAtPoint(self.planetX, self.planetY, self.radius);
 
 

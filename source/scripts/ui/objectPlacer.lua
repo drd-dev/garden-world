@@ -75,15 +75,15 @@ function ObjectPlacer:init()
   self.decorations = {
     Fence,
     Bench,
+    TrashCan,
     Bush,
     Grass,
-    Hut,
     StreetLamp,
+    SwingSet,
+    Hut,
+    Fountain,
     Cat,
     IcyStatue,
-    SwingSet,
-    TrashCan,
-    Fountain
   }
 
   self.selctedPlant = 1
