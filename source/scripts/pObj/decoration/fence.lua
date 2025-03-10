@@ -16,7 +16,7 @@ local img <const> = gfx.image.new("images/decoration/Fence")
 Fence.name = "Fence"
 Fence.img = img;
 Fence.icon = img;
-Fence.cost = 50;
+Fence.cost = 25;
 
 
 function Fence:init(angle, distance, planet)

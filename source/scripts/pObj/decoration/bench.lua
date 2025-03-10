@@ -15,7 +15,7 @@ local img <const> = gfx.image.new("images/decoration/Bench")
 Bench.name = "Bench"
 Bench.img = img;
 Bench.icon = img;
-Bench.cost = 50;
+Bench.cost = 35;
 
 
 function Bench:init(angle, distance, planet)

@@ -34,6 +34,11 @@ import "scripts/pObj/decoration/cat"
 import "scripts/pObj/decoration/swingSet"
 import "scripts/pObj/decoration/trashcan"
 import "scripts/pObj/decoration/fountain"
+import "scripts/pObj/decoration/pottedPlant_001"
+import "scripts/pObj/decoration/pottedPlant_002"
+import "scripts/pObj/decoration/pottedPlant_003"
+import "scripts/pObj/decoration/pottedPlant_004"
+import "scripts/pObj/decoration/pottedPlant_005"
 
 --plants
 import "scripts/pObj/plants/_plant"
