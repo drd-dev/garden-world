@@ -10,7 +10,7 @@ Daisies.img = imgtable:getImage(1);
 Daisies.icon = ICON_IMAGETABLE:getImage(2);
 Daisies.cost = 50;
 Daisies.points = 2;
-Daisies.water = 25;
+Daisies.water = 35;
 Daisies.name = "DAISIES"
 
 function Daisies:init(angle, distance, planet)
