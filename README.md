@@ -1,5 +1,8 @@
 # GARDEN WORLD
- ![Garden world title screen](https://img.itch.zone/aW1hZ2UvMzM4Njk4OS8yMDIyMDQ1Mi5naWY=/347x500/nnoRJQ.gif)
+![Garden world title screen](https://img.itch.zone/aW1hZ2UvMzM4Njk4OS8yMDIyMDQ1Mi5naWY=/347x500/nnoRJQ.gif)
+![Garden screenshot](https://img.itch.zone/aW1hZ2UvMzM4Njk4OS8yMDIyMDAyMC5naWY=/347x500/IuBiGp.gif)
+![Garden screenshot](https://img.itch.zone/aW1hZ2UvMzM4Njk4OS8yMDIyMDAxOC5naWY=/347x500/XgukR8.gif)
+![Garden screenshot](https://img.itch.zone/aW1hZ2UvMzM4Njk4OS8yMDIyMDAxOS5naWY=/347x500/Ok3KjH.gif)
 
 
 ### Oh no! You're stranded on a small desolate moon! Good thing you brought your gardening tools!
