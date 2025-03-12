@@ -2,7 +2,7 @@ local pd <const> = playdate
 local gfx <const> = pd.graphics
 
 ---@class Cat : PObj
----@overload fun(angle: number, distance: number, planet: Planet): Cat
+---@overload fun(angle: number, distance: number, planet: Planet, skipOnPlace: boolean): Cat
 Cat = class("Cat").extends("PObj") or Cat;
 
 
@@ -18,14 +18,17 @@ Cat.cost = 500;
 local meow = pd.sound.sampleplayer.new("sound/sfx/meow")
 meow:setVolume(0.25)
 
-function Cat:init(angle, distance, planet)
+function Cat:init(angle, distance, planet, skipOnPlace)
   Cat.super.init(self, img:getImage(1), angle, distance, planet)
 
   self:setUpdatesEnabled(true);
 
 
   self.animator = gfx.animation.loop.new(250, img, true)
-  meow:play(1, 1)
+
+  if (not skipOnPlace) then
+    meow:play(1, 1)
+  end
 end
 
 function Cat:update()

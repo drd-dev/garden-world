@@ -1,7 +1,7 @@
 name=GARDEN WORLD
-author=Dylan Doughertry (DRD-DEV)
+author=DRD.
 description=Grow plants and decorate your tiny planet
 bundleID=dev.drd.gardenworld
 imagePath=metadata
-version=1.0
-buildNumber=1
+version=1.1
+buildNumber=2

@@ -12,6 +12,11 @@ import "CoreLibs/nineslice"
 --libraries
 import "scripts/libraries/pdParticles"
 
+
+
+--utils and things
+import "scripts/saving/saveManager"
+SaveManager.load();
 import "scripts/utils/utils"
 import "scripts/global"
 import "scripts/world/planet"
@@ -64,8 +69,24 @@ local gfx <const> = pd.graphics
 local backgroundImage = gfx.image.new("images/background")
 assert(backgroundImage, "No backgroundImage")
 
+gfx.setFont(FONT.MiniMono)
+
 gfx.sprite.setBackgroundDrawingCallback(function(x, y, width, height)
   backgroundImage:draw(0, 0)
+end)
+
+
+--setup system menu
+local menu = pd.getSystemMenu()
+menu:addMenuItem("Reset save", function()
+  SaveManager.saveData = table.deepcopy(defaultSaveData)
+  SaveManager.save()
+  playdate.restart()
+end)
+
+menu:addCheckmarkMenuItem("Swap A/B", SaveManager.saveData.settings.buttonSwap, function()
+  SaveManager.saveData.settings.buttonSwap = not SaveManager.saveData.settings.buttonSwap
+  SaveManager.save()
 end)
 
 

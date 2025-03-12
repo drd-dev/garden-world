@@ -31,6 +31,6 @@ function ResourceUI:draw(x, y, width, height)
   self.sunImg:draw(x + 1, y + 1)
   gfx.setFont(FONT.MiniMono)
   gfx.setImageDrawMode(gfx.kDrawModeFillWhite)
-  gfx.drawTextAligned(POINTS .. "", x + 18, y + 5, kTextAlignment.left)
+  gfx.drawTextAligned(SaveManager.saveData.points .. "", x + 18, y + 5, kTextAlignment.left)
   gfx.setImageDrawMode(gfx.kDrawModeCopy)
 end

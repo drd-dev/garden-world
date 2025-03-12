@@ -125,9 +125,16 @@ function ObjectPlacer:draw(x, y, width, height)
   gfx.drawTextAligned(text, x + width / 2, y + boxHeight / 2 - 3, kTextAlignment.center)
 
   gfx.setFont(FONT.NanoSans)
-  gfx.drawTextAligned("B-SWAP ", x + 2, y + boxHeight + 2, kTextAlignment.left)
-  local textWidth = gfx.getTextSize("A-USE")
-  gfx.drawTextAligned("A-USE", x + width - textWidth, y + boxHeight + 2, kTextAlignment.left)
+  if (not SaveManager.saveData.settings.buttonSwap) then
+    gfx.drawTextAligned("B-SWAP ", x + 2, y + boxHeight + 2, kTextAlignment.left)
+    local textWidth = gfx.getTextSize("A-USE")
+    gfx.drawTextAligned("A-USE", x + width - textWidth, y + boxHeight + 2, kTextAlignment.left)
+  else
+    gfx.drawTextAligned("B-USE ", x + 2, y + boxHeight + 2, kTextAlignment.left)
+    local textWidth = gfx.getTextSize("A-SWAP")
+    gfx.drawTextAligned("A-SWAP", x + width - textWidth, y + boxHeight + 2, kTextAlignment.left)
+  end
+
 
   gfx.setFont(FONT.MiniMono)
   local object = nil;
@@ -169,7 +176,7 @@ function ObjectPlacer:update()
     self.cursor:setVisible(false)
   end
 
-  if (pd.buttonJustPressed(pd.kButtonB) and self:isVisible()) then
+  if (self:checkButtonJustPressed(pd.kButtonB) and self:isVisible()) then
     self.mode += 1;
     if (self.mode > 4) then
       self.mode = 1
@@ -192,21 +199,21 @@ function ObjectPlacer:update()
 
 
   --place object
-  if (pd.buttonJustPressed(pd.kButtonA) and self:isVisible() and self.mode == TOOL_MODE.PLANT) then
+  if (self:checkButtonJustPressed(pd.kButtonA) and self:isVisible() and self.mode == TOOL_MODE.PLANT) then
     local object = self.plants[self.selctedPlant]
     local widthCheck = object.img:getSize();
-    if (POINTS >= object.cost and checkAngleForObjects((270 - self.planet.planetRotation) % 360, widthCheck, 2)) then
-      self:placeObject()
+    if (SaveManager.saveData.points >= object.cost and checkAngleForObjects((270 - self.planet.planetRotation) % 360, widthCheck, 2)) then
+      self:placeObject(self.plants[self.selctedPlant])
     else
       self.selectSound:play(1, 0.25)
     end
   end
 
-  if (pd.buttonJustPressed(pd.kButtonA) and self:isVisible() and self.mode == TOOL_MODE.DECORATE) then
+  if (self:checkButtonJustPressed(pd.kButtonA) and self:isVisible() and self.mode == TOOL_MODE.DECORATE) then
     local object = self.decorations[self.selctedDecoration]
     local widthCheck = object.img:getSize();
-    if (POINTS >= object.cost and checkAngleForObjects((270 - self.planet.planetRotation) % 360, widthCheck, 2)) then
-      self:placeDecoration()
+    if (SaveManager.saveData.points >= object.cost and checkAngleForObjects((270 - self.planet.planetRotation) % 360, widthCheck, 2)) then
+      self:placeObject(self.decorations[self.selctedDecoration])
     else
       self.selectSound:play(1, 0.25)
     end
@@ -214,33 +221,33 @@ function ObjectPlacer:update()
 
 
   --remove object
-  if (pd.buttonJustPressed(pd.kButtonA) and self.mode == TOOL_MODE.SHOVEL) then
+  if (self:checkButtonJustPressed(pd.kButtonA) and self.mode == TOOL_MODE.SHOVEL) then
     self:removeObject();
   end
 
 
   --water object
-  if (pd.buttonJustPressed(pd.kButtonA) and self.mode == TOOL_MODE.WATER) then
+  if (self:checkButtonJustPressed(pd.kButtonA) and self.mode == TOOL_MODE.WATER) then
     self:water();
   end
 
 
-  if (pd.buttonJustPressed(pd.kButtonLeft) and self:isVisible() and self.mode == TOOL_MODE.PLANT) then
+  if (self:checkButtonJustPressed(pd.kButtonLeft) and self:isVisible() and self.mode == TOOL_MODE.PLANT) then
     self:prevObject()
     self.selectSound:play(1, 0.75)
   end
 
-  if (pd.buttonJustPressed(pd.kButtonRight) and self:isVisible() and self.mode == TOOL_MODE.PLANT) then
+  if (self:checkButtonJustPressed(pd.kButtonRight) and self:isVisible() and self.mode == TOOL_MODE.PLANT) then
     self:nextObject()
     self.selectSound:play(1, 1)
   end
 
-  if (pd.buttonJustPressed(pd.kButtonLeft) and self:isVisible() and self.mode == TOOL_MODE.DECORATE) then
+  if (self:checkButtonJustPressed(pd.kButtonLeft) and self:isVisible() and self.mode == TOOL_MODE.DECORATE) then
     self:prevDecoration()
     self.selectSound:play(1, 0.75)
   end
 
-  if (pd.buttonJustPressed(pd.kButtonRight) and self:isVisible() and self.mode == TOOL_MODE.DECORATE) then
+  if (self:checkButtonJustPressed(pd.kButtonRight) and self:isVisible() and self.mode == TOOL_MODE.DECORATE) then
     self:nextDecoration()
     self.selectSound:play(1, 1)
   end
@@ -255,37 +262,22 @@ function ObjectPlacer:handleCursor()
   self.cursor:moveTo(x, y)
 end
 
-function ObjectPlacer:placeObject()
+function ObjectPlacer:placeObject(object)
   if (self.cursor.placementAnimator) then return end
   local speed = 500;
-  local object = self.plants[self.selctedPlant]
   self.cursor:animate(speed)
   pd.timer.new(speed, function()
     CAMERA:applyScreenShake(2, 100)
-    POINTS -= object.cost;
+    SaveManager.saveData.points -= object.cost;
     self.particles:add(20)
     local planet = self.planet
     local angle = (270 - planet.planetRotation) % 360;
-    object(angle, 0, planet)
+    local instance = object(angle, 0, planet)
     planet:markDirty()
     self.plantSound:play(1, 1)
-  end)
-end
 
-function ObjectPlacer:placeDecoration()
-  if (self.cursor.placementAnimator) then return end
-  local speed = 500;
-  local object = self.decorations[self.selctedDecoration]
-  self.cursor:animate(speed)
-  pd.timer.new(speed, function()
-    CAMERA:applyScreenShake(2, 100)
-    POINTS -= object.cost;
-    self.particles:add(20)
-    local planet = self.planet
-    local angle = (270 - planet.planetRotation) % 360;
-    object(angle, 0, planet)
-    planet:markDirty()
-    self.plantSound:play(1, 1)
+    --insert the new object into the instanced objects table
+    table.insert(INSTANCED_OBJS, instance);
   end)
 end
 
@@ -336,7 +328,14 @@ function ObjectPlacer:removeObject()
           obj:remove();
           self.digSound:play(1, random(90, 110) * 0.01)
           if (obj.cost) then
-            POINTS += obj.cost;
+            SaveManager.saveData.points += obj.cost;
+          end
+
+          --finally remove the object from the global list of instances
+          for i, inst in ipairs(INSTANCED_OBJS) do
+            if (inst.angle == obj.angle) then
+              table.remove(INSTANCED_OBJS, i)
+            end
           end
         end
       end
@@ -364,4 +363,25 @@ function ObjectPlacer:water()
       end
     end
   end);
+end
+
+function ObjectPlacer:checkButtonPressed(button)
+  if (SaveManager.saveData.settings.buttonSwap) then
+    return not pd.buttonIsPressed(button)
+  else
+    return pd.buttonIsPressed(button)
+  end
+end
+
+function ObjectPlacer:checkButtonJustPressed(button)
+  if (SaveManager.saveData.settings.buttonSwap) then
+    if (button == pd.kButtonA) then
+      button = pd.kButtonB
+    elseif (button == pd.kButtonB) then
+      button = pd.kButtonA
+    end
+  end
+
+
+  return pd.buttonJustPressed(button)
 end

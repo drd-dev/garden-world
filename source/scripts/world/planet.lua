@@ -136,6 +136,44 @@ function Planet:drawObjects()
 end
 
 function Planet:populatePlanet()
+  --load the clouds in
+  local cloudCount = 15;
+  for i = 1, cloudCount do
+    local angle = random(0, 360);
+    local distance = random(100, 200);
+    local cloud = Cloud(angle, distance, self);
+  end
+
+
+
+  if (#SaveManager.saveData.objects ~= 0) then
+    self:loadObjects(SaveManager.saveData.objects);
+  else
+    self:initPlanet();
+  end
+end
+
+---loads a table of objects into a planet.
+function Planet:loadObjects(objects)
+  print("loading objects")
+  for i, object in pairs(objects) do
+    local classRef = _G[object.type];
+    if (classRef) then
+      local inst = classRef(object.angle, 0, self, true);
+
+      if (inst:isa(Plant)) then
+        inst.currentWater = object.water;
+        inst.fullyGrown = object.fullyGrown;
+      end
+      --add to global instance list
+      INSTANCED_OBJS[#INSTANCED_OBJS + 1] = inst;
+    end
+  end
+end
+
+---Initializes a planet with random objects
+function Planet:initPlanet()
+  print("initializing planet")
   local objs = {
     Rock_001,
     Grass,
@@ -153,20 +191,11 @@ function Planet:populatePlanet()
 
     --check the space
     if (checkAngleForObjects(angle, 32, 2)) then
-      local object = nil;
       local index = random(1, #objs);
 
-      object = objs[index](angle, 0, self);
+      local instance = objs[index](angle, 0, self);
+      --add to global instance list
+      INSTANCED_OBJS[#INSTANCED_OBJS + 1] = instance;
     end
   end;
-
-
-
-  --add clouds
-  local cloudCount = 15;
-  for i = 1, cloudCount do
-    local angle = random(0, 360);
-    local distance = random(100, 200);
-    local cloud = Cloud(angle, distance, self);
-  end
 end

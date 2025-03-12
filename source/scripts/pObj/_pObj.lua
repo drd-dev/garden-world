@@ -4,13 +4,14 @@ local getOrbitPosition <const> = Utils.getOrbitPosition
 
 
 ---@class PObj: _Sprite
----@overload fun(angle: number, distance: number, planet: Planet): PObj
+---@overload fun(angle: number, distance: number, planet: Planet, skipOnPlace: boolean): PObj
 PObj = class("PObj").extends(gfx.sprite) or PObj;
 
 
-function PObj:init(image, angle, distance, planet)
+function PObj:init(image, angle, distance, planet, skipOnPlace)
   PObj.super.init(self)
 
+  skipOnPlace = skipOnPlace or false
   planet.objects[#planet.objects + 1] = self
   self.planetObjectIndex = #planet.objects
 

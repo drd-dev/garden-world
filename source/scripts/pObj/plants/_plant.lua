@@ -22,6 +22,7 @@ function Plant:init(imagetable, angle, distance, planet, water, growTime)
 
   self.currentWater = self.water;
   self.fullyGrown = false;
+  self.didGrowCall = false;
   self.growStepTime = self.growTime / #imagetable
   self.animator = gfx.animation.loop.new(self.growStepTime, self.imagetable, false)
 
@@ -32,13 +33,17 @@ end
 
 function Plant:update()
   Plant.super.update(self)
-  if (not self.animator:isValid()) then
-    if (not self.fullyGrown) then
-      self.fullyGrown = true;
-      self:onFullGrown();
+
+  if (self.fullyGrown) then
+    if (not self.didGrowCall) then
+      self:onFullGrown()
+      self.image = self.imagetable:getImage(#self.imagetable)
+      self.didGrowCall = true
     else
-      self:grownUpdate();
+      self:grownUpdate()
     end
+  elseif (not self.animator:isValid()) then
+    self.fullyGrown = true;
   else
     self.image = self.animator:image()
   end
@@ -49,7 +54,7 @@ function Plant:grownUpdate()
   local time = pd.getElapsedTime();
   if (self.currentWater > 0 and time - self.now > (self.pointTime / 1000)) then
     self.now = pd.getElapsedTime();
-    POINTS += self.points;
+    SaveManager.saveData.points += self.points;
     self.pointAnimator = gfx.animator.new(500, -5, 0);
     self.currentWater -= 1;
   end
@@ -61,9 +66,9 @@ end
 
 ---caled once when the plant fully grows
 function Plant:onFullGrown()
+
 end
 
 function Plant:waterPlant()
-  print("watered plant")
   self.currentWater = self.water;
 end
