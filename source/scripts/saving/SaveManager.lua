@@ -62,6 +62,12 @@ function SaveManager.load()
   return SaveManager.saveData;
 end
 
+function SaveManager.resetSave()
+  SaveManager.saveData = table.deepcopy(defaultSaveData)
+  INSTANCED_OBJS = {}
+  SaveManager.save()
+end
+
 function pd.gameWillTerminate()
   SaveManager.save()
 end

@@ -178,14 +178,10 @@ function Planet:initPlanet()
     Rock_001,
     Grass,
     Grass,
-    Grass,
-    Grass,
-    Grass,
-    Grass,
   }
 
 
-  local numObjects = 50;
+  local numObjects = 100;
   for i = 1, numObjects do
     local angle = math.random(0, 360);
 

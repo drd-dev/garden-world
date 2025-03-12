@@ -79,8 +79,7 @@ end)
 --setup system menu
 local menu = pd.getSystemMenu()
 menu:addMenuItem("Reset save", function()
-  SaveManager.saveData = table.deepcopy(defaultSaveData)
-  SaveManager.save()
+  SaveManager.resetSave();
   playdate.restart()
 end)
 
@@ -94,6 +93,16 @@ end)
 local mainMenu = true;
 local controlsShown = false;
 local mainMenuImage = gfx.image.new("images/ui/mainMenu")
+gfx.pushContext(mainMenuImage)
+gfx.setImageDrawMode(gfx.kDrawModeFillBlack)
+local text = "v" .. pd.metadata.version
+local textWidth = gfx.getTextSize(text)
+local padding = 5;
+gfx.drawText(text, pd.display:getWidth() - textWidth - padding, padding);
+gfx.setImageDrawMode(gfx.kDrawModeFillWhite)
+gfx.drawText(text, pd.display:getWidth() - textWidth - padding - 1, padding - 1);
+gfx.popContext()
+
 local controlsImage = gfx.image.new("images/ui/controls")
 local mainMenuSprite = gfx.sprite.new(mainMenuImage)
 mainMenuSprite:setCenter(0, 0)
@@ -129,6 +138,13 @@ function pd.update()
 
   music:setVolume(CURRENT_ZOOM / ZOOM_MAX)
   wind:setVolume(0.5 - (CURRENT_ZOOM / ZOOM_MAX))
+
+  --slowly rotate on mainMenu
+  if (mainMenu) then
+    PLANET.planetRotation += 0.015
+  end
+
+
   if (mainMenu == true and pd.buttonJustPressed(pd.kButtonA)) then
     if (controlsShown == false) then
       controlsShown = true;
