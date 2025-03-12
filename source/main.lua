@@ -127,7 +127,9 @@ Planet(1000)
 
 
 local music = pd.sound.sampleplayer.new("sound/music/KleptoLindaMountainA")
+music:setVolume(1.5)
 local wind = pd.sound.sampleplayer.new("sound/music/Eerie Wind Loop A")
+wind:setVolume(1.5)
 music:play(0, 1)
 wind:play(0, 1);
 

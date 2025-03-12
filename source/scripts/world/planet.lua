@@ -1,12 +1,12 @@
 import "scripts/pObj/_pObj"
 import "scripts/world/moon"
-
+import "scripts/world/sun"
 local pd <const> = playdate
 local gfx <const> = pd.graphics
 local getOrbitPosition <const> = Utils.getOrbitPosition
 local random <const> = math.random
 local checkAngleForObjects <const> = Utils.checkAngleForObjects
-local easeInExpo <const> = Utils.easeInExpo
+local easeOutExpo <const> = Utils.easeOutExpo
 
 
 ---@class Planet : _Sprite
@@ -62,7 +62,7 @@ function Planet:update()
 
 
 
-  self.planetY = Utils.easeOutExpo(self.centerY, self.centerY + (self.size * 0.54), CURRENT_ZOOM - 0.1);
+  self.planetY = easeOutExpo(self.centerY, self.centerY + (self.size * 0.54), CURRENT_ZOOM - 0.1);
   -- self.planetY = self.centerY + (self.size * 0.54);
 
   self:markDirty()
@@ -120,6 +120,10 @@ function Planet:drawObjects()
       angle -= self.planetRotation
     end
 
+    if (object.ignoreRotation) then
+      a = 0;
+    end
+
 
     local x, y = getOrbitPosition(self, angle, distance * CURRENT_ZOOM);
     object.x = x
@@ -144,6 +148,9 @@ function Planet:drawObjects()
 end
 
 function Planet:populatePlanet()
+  --load the sun in
+  local sun = Sun(180, 2500, self);
+
   --load the moon in
   local moon = Moon(0, 350, self);
 
