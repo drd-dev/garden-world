@@ -65,3 +65,23 @@ function Utils.checkAngleForObjects(angle, width, padding)
   end
   return freeSpace, foundObjs
 end
+
+function Utils.easeInExpo(a, b, t)
+  if t == 0 then return a end
+  return a + (b - a) * (2 ^ (10 * (t - 1)))
+end
+
+function Utils.easeOutExpo(a, b, t)
+  if t == 1 then return b end
+  return a + (b - a) * (-(2 ^ (-10 * t)) + 1)
+end
+
+function Utils.easeInOutExpo(a, b, t)
+  if t == 0 then return a end
+  if t == 1 then return b end
+  if t < 0.5 then
+    return a + (b - a) / 2 * (2 ^ (20 * t - 10))
+  else
+    return a + (b - a) / 2 * (-(2 ^ (-20 * t + 10)) + 2)
+  end
+end

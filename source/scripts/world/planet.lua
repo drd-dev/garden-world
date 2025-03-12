@@ -1,8 +1,12 @@
+import "scripts/pObj/_pObj"
+import "scripts/world/moon"
+
 local pd <const> = playdate
 local gfx <const> = pd.graphics
 local getOrbitPosition <const> = Utils.getOrbitPosition
 local random <const> = math.random
 local checkAngleForObjects <const> = Utils.checkAngleForObjects
+local easeInExpo <const> = Utils.easeInExpo
 
 
 ---@class Planet : _Sprite
@@ -56,7 +60,10 @@ function Planet:update()
   self.radius = self.size / 2;
   self.planetX = self.x + self.halfWidth;
 
-  self.planetY = self.centerY + (self.size * 0.54)
+
+
+  self.planetY = Utils.easeOutExpo(self.centerY, self.centerY + (self.size * 0.54), CURRENT_ZOOM - 0.1);
+  -- self.planetY = self.centerY + (self.size * 0.54);
 
   self:markDirty()
 end
@@ -73,6 +80,7 @@ function Planet:drawPlanet(x, y, width, height)
   --outer edge
   gfx.drawCircleAtPoint(self.planetX, self.planetY, self.radius);
 
+  --background to stop dither from being see through
   gfx.setColor(gfx.kColorBlack);
   gfx.fillCircleAtPoint(self.planetX, self.planetY, self.radius);
 
@@ -136,6 +144,9 @@ function Planet:drawObjects()
 end
 
 function Planet:populatePlanet()
+  --load the moon in
+  local moon = Moon(0, 350, self);
+
   --load the clouds in
   local cloudCount = 15;
   for i = 1, cloudCount do
@@ -145,8 +156,8 @@ function Planet:populatePlanet()
   end
 
 
-
-  if (#SaveManager.saveData.objects ~= 0) then
+  --initialize the planet with random objects if this is a new save
+  if (#SaveManager.saveData.objects ~= 0 and SaveManager.saveData.points == 0) then
     self:loadObjects(SaveManager.saveData.objects);
   else
     self:initPlanet();
