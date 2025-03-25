@@ -164,9 +164,12 @@ function Planet:populatePlanet()
 
 
   --initialize the planet with random objects if this is a new save
-  if (#SaveManager.saveData.objects ~= 0 and SaveManager.saveData.points == 0) then
+  print(#SaveManager.saveData.objects)
+  if (#SaveManager.saveData.objects ~= 0 and SaveManager.saveData.points ~= 0) then
+    print("loading objects from save file")
     self:loadObjects(SaveManager.saveData.objects);
   else
+    print("initializing new planet with objects")
     self:initPlanet();
   end
 end

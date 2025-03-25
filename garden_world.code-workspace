@@ -1,0 +1,13 @@
+{
+  "folders": [
+	{
+		"path": "."
+	},
+	{
+		"path": "../../../playdate/PlaydateSDK/Disk/Data/dev.drd.gardenworld"
+	}
+],
+  "settings": {
+    "terminal.integrated.defaultProfile.windows": "PowerShell"
+  }
+}

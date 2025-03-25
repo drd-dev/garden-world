@@ -3,5 +3,5 @@ author=DRD.
 description=Grow plants and decorate your tiny planet
 bundleID=dev.drd.gardenworld
 imagePath=metadata
-version=1.1
-buildNumber=2
+version=1.1.1
+buildNumber=3
